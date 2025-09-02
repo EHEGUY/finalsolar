@@ -1,0 +1,100 @@
+.theme-toggle {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px var(--shadow);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px var(--shadow);
+}
+
+.toggle-container {
+  position: relative;
+  width: 60px;
+  height: 30px;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  background: var(--bg-secondary);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-slider.light::before {
+  transform: translateX(0);
+}
+
+.toggle-slider.dark::before {
+  transform: translateX(30px);
+}
+
+.sun-icon, .moon-icon {
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.toggle-slider.light .sun-icon {
+  color: white;
+}
+
+.toggle-slider.light .moon-icon {
+  color: var(--text-secondary);
+}
+
+.toggle-slider.dark .sun-icon {
+  color: var(--text-secondary);
+}
+
+.toggle-slider.dark .moon-icon {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: 1rem;
+    right: 1rem;
+  }
+  
+  .toggle-container {
+    width: 50px;
+    height: 25px;
+  }
+  
+  .toggle-slider::before {
+    width: 19px;
+    height: 19px;
+  }
+  
+  .toggle-slider.dark::before {
+    transform: translateX(25px);
+  }
+}

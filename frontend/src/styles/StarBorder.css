@@ -1,0 +1,120 @@
+.star-border-container {
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  position: relative;
+  display: inline-block;
+  padding: 4px;
+  border-radius: 16px;
+  background: linear-gradient(45deg, transparent 30%, var(--accent) 50%, transparent 70%);
+  background-size: 200% 200%;
+  animation: rotateBorder 3s linear infinite;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.star-border-container:hover {
+  transform: scale(1.05);
+  animation-duration: 1s;
+}
+
+.star-border-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 18px;
+  background: radial-gradient(
+    circle at var(--mouse-x) var(--mouse-y),
+    var(--accent) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.star-border-container:hover .star-border-glow {
+  opacity: 0.6;
+}
+
+.star-border-content {
+  position: relative;
+  z-index: 2;
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.star-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.star-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: sparkle 2s ease-in-out infinite;
+  opacity: 0;
+}
+
+.star-particle:nth-child(odd) {
+  animation-delay: 0.5s;
+}
+
+.star-particle:nth-child(even) {
+  animation-delay: 1s;
+}
+
+.star-particle:nth-child(1) { top: 20%; left: 10%; }
+.star-particle:nth-child(2) { top: 30%; right: 15%; }
+.star-particle:nth-child(3) { bottom: 25%; left: 20%; }
+.star-particle:nth-child(4) { bottom: 35%; right: 10%; }
+.star-particle:nth-child(5) { top: 50%; left: 5%; }
+.star-particle:nth-child(6) { top: 60%; right: 5%; }
+.star-particle:nth-child(7) { top: 10%; left: 50%; }
+.star-particle:nth-child(8) { bottom: 15%; left: 60%; }
+.star-particle:nth-child(9) { top: 80%; right: 30%; }
+.star-particle:nth-child(10) { bottom: 70%; left: 40%; }
+.star-particle:nth-child(11) { top: 15%; right: 40%; }
+.star-particle:nth-child(12) { bottom: 20%; right: 50%; }
+.star-particle:nth-child(13) { top: 70%; left: 30%; }
+.star-particle:nth-child(14) { bottom: 60%; right: 20%; }
+.star-particle:nth-child(15) { top: 40%; left: 80%; }
+.star-particle:nth-child(16) { bottom: 50%; left: 15%; }
+.star-particle:nth-child(17) { top: 90%; right: 60%; }
+.star-particle:nth-child(18) { bottom: 10%; left: 70%; }
+.star-particle:nth-child(19) { top: 25%; right: 80%; }
+.star-particle:nth-child(20) { bottom: 80%; right: 70%; }
+
+@keyframes rotateBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
