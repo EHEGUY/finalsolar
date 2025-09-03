@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SolarMap from './SolarMap';
 import ThemeToggle from './ThemeToggle';
 import { MapPin, Sun, Compass, TrendingUp, Cloud, Info, Thermometer } from 'lucide-react';
-import axios from 'axios';
+import { solarAPI } from '../api'; // Import your API file
 import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/MainPage.css';
 
@@ -101,87 +101,31 @@ const MainPage = () => {
     try {
       console.log(`Making API call with coords: ${lat}, ${lng}, weather: ${weatherEnabled}`);
       
-      const response = await axios.post('/api/solar-data', {
+      // Use your new API file instead of axios
+      const locationData = {
         latitude: lat,
         longitude: lng,
         include_weather: weatherEnabled
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: 10000,
-      });
+      };
+
+      const response = await solarAPI.getSolarData(locationData);
       
-      console.log('API response received:', response.data);
-      setSolarData(response.data);
+      console.log('API response received:', response);
+      setSolarData(response);
       setError(null); // Clear any previous errors
       
     } catch (error) {
       console.error('Full API Error:', error);
-      console.error('Error response:', error.response?.data);
       
       let errorMessage = 'An unexpected error occurred while analyzing solar data.';
       
-      try {
-        if (error.code === 'ECONNREFUSED') {
-          errorMessage = 'Cannot connect to server. Please ensure the backend is running on port 8000.';
-        } else if (error.code === 'ECONNABORTED') {
-          errorMessage = 'Request timed out. Please try again.';
-        } else if (error.response) {
-          const status = error.response.status;
-          const data = error.response.data;
-          
-          // Handle different status codes
-          if (status === 404) {
-            errorMessage = 'API endpoint not found. Check if the backend server is running correctly.';
-          } else if (status === 500) {
-            errorMessage = 'Internal server error. Please check the backend logs.';
-          } else if (status === 422) {
-            errorMessage = 'Invalid input data. Please check your coordinates.';
-          } else {
-            // Handle the response data more defensively
-            if (data === null || data === undefined) {
-              errorMessage = `Server error (${status}): No additional information available.`;
-            } else if (typeof data === 'string') {
-              errorMessage = data;
-            } else if (typeof data === 'object') {
-              // Try multiple ways to extract a meaningful message
-              if (data.detail) {
-                if (typeof data.detail === 'string') {
-                  errorMessage = data.detail;
-                } else if (Array.isArray(data.detail)) {
-                  errorMessage = data.detail
-                    .map(item => typeof item === 'string' ? item : 
-                      (item.msg || item.message || 'Validation error'))
-                    .join(', ');
-                } else {
-                  errorMessage = 'Server returned validation errors.';
-                }
-              } else if (data.message) {
-                errorMessage = typeof data.message === 'string' ? data.message : 'Server returned an error message.';
-              } else if (data.error) {
-                errorMessage = typeof data.error === 'string' ? data.error : 'Server returned an error.';
-              } else {
-                // Last resort - try to find any string values
-                const stringValues = Object.values(data).filter(v => typeof v === 'string');
-                if (stringValues.length > 0) {
-                  errorMessage = stringValues[0];
-                } else {
-                  errorMessage = `Server error (${status}): Unable to parse error details.`;
-                }
-              }
-            } else {
-              errorMessage = `Server error (${status}): ${error.response.statusText || 'Unknown error'}`;
-            }
-          }
-        } else if (error.request) {
-          errorMessage = 'No response from server. Please check your internet connection and ensure the backend is running.';
-        } else if (error.message) {
-          errorMessage = `Request error: ${error.message}`;
-        }
-      } catch (parseError) {
-        console.error('Error parsing error message:', parseError);
-        errorMessage = 'An error occurred and we were unable to parse the error details.';
+      // Handle different error types
+      if (error.message.includes('Failed to fetch')) {
+        errorMessage = 'Cannot connect to server. Please check your internet connection.';
+      } else if (error.message.includes('HTTP error')) {
+        errorMessage = `Server error: ${error.message}`;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
       
       setError(errorMessage);
@@ -548,7 +492,7 @@ const MainPage = () => {
                         >
                           <p><strong>Peak Month:</strong> {solarData.peak_month}</p>
                           <p><strong>Lowest Month:</strong> {solarData.low_month}</p>
-                        </motion.div>
+                        </div>
                       )}
                     </div>
                   </motion.div>
